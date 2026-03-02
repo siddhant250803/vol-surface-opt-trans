@@ -9,10 +9,10 @@ Optimal transport ($W_1$, $W_2$) applied to SPX options: risk-neutral vs physica
 See [docs/VRP_DEFINITIONS.md](docs/VRP_DEFINITIONS.md) for full specification. Summary:
 
 - **Horizon $H$**: Fixed in calendar days (e.g., $H=7$). $\tau_t = H/365$ (years).
-- **SVI total variance** $w^{\mathrm{ATM}}_t = w_t(0,\tau_t)$ at ATM. **Annualized IV²**: $IV^2_{t,\mathrm{ann}} = w^{\mathrm{ATM}}_t / \tau_t$. **ATM IV** (vol): $IV_{t,\mathrm{ann}} = \sqrt{w^{\mathrm{ATM}}_t / \tau_t}$.
-- **Forward RV**: $RV_{t,H} = \sum_i r_{t+i}^2$ over window spanning $\geq H$ calendar days. **Annualized**: $RV_{t,\mathrm{ann}} = RV_{t,H} \times (365 / \mathrm{span\_days}_t)$.
-- **VRP**: $VRP_{t,H} = RV_{t,\mathrm{ann}} - IV^2_{t,\mathrm{ann}}$ (both annualized; horizon-matched).
-- **Stress**: Top decile of forward $RV_{t,\mathrm{ann}}$. Calm = bottom decile.
+- **SVI total variance** $w^{\text{ATM}}_t = w_t(0,\tau_t)$ at ATM. **Annualized IV²**: $IV^2_{t,\text{ann}} = w^{\text{ATM}}_t / \tau_t$. **ATM IV** (vol): $IV_{t,\text{ann}} = \sqrt{w^{\text{ATM}}_t / \tau_t}$.
+- **Forward RV**: $RV_{t,H} = \sum_i r_{t+i}^2$ over window spanning $\geq H$ calendar days. **Annualized**: $RV_{t,\text{ann}} = RV_{t,H} \times (365 / \text{span\_days}_t)$.
+- **VRP**: $VRP_{t,H} = RV_{t,\text{ann}} - IV^2_{t,\text{ann}}$ (both annualized; horizon-matched).
+- **Stress**: Top decile of forward $RV_{t,\text{ann}}$. Calm = bottom decile.
 
 ---
 
@@ -20,7 +20,7 @@ See [docs/VRP_DEFINITIONS.md](docs/VRP_DEFINITIONS.md) for full specification. S
 
 We compare **risk-neutral ($Q$)** and **physical ($P$)** distributions from SPX options using Wasserstein distances.
 
-- **$W_1(Q, Q_{\mathrm{prev}})$** — surface shift proxy. We observe a positive association in-sample with forward VRP (correlation $\approx 0.54$).
+- **$W_1(Q, Q_{\text{prev}})$** — surface shift proxy. We observe a positive association in-sample with forward VRP (correlation $\approx 0.54$).
 - **$W_2(Q, P)$** — Q–P divergence. Under our bootstrap $P$, $W_2$ is *lower* in stress (top RV decile) than calm; see [DIAGNOSTICS](outputs/report/ot_findings/DIAGNOSTICS.md).
 
 $Q$ recovered via Breeden–Litzenberger; $P$ via iid bootstrap of historical returns (see Methodology).
@@ -31,7 +31,7 @@ $Q$ recovered via Breeden–Litzenberger; $P$ via iid bootstrap of historical re
 
 | Metric | Meaning | Finding |
 |--------|---------|---------|
-| **$W_1(Q, Q_{\mathrm{prev}})$** | Risk-neutral density change day-to-day | High $W_1$ → RV tends to exceed IV; low $W_1$ → RV $\approx$ IV. In-sample association only. |
+| **$W_1(Q, Q_{\text{prev}})$** | Risk-neutral density change day-to-day | High $W_1$ → RV tends to exceed IV; low $W_1$ → RV $\approx$ IV. In-sample association only. |
 | **$W_2(Q, P)$** | Q–P divergence | Regime proxy. Lower in stress than calm under our $P$; see diagnostics. |
 | **Decile spread** | $D_{10} - D_1$ mean(VRP) | $\approx 0.17$ ($D_1 \approx -0.004$, $D_{10} \approx 0.17$) when sorted by $W_1$. |
 
@@ -53,14 +53,18 @@ $Q$ recovered via Breeden–Litzenberger; $P$ via iid bootstrap of historical re
 2. **Call prices** → from SVI
 3. **Q recovery** → Breeden–Litzenberger ($q(K) = e^{rT} \partial^2 C/\partial K^2$). Central finite differences on call prices; clip negative density, renormalize. No analytic SVI derivatives.
 4. **P estimation** → Iid bootstrap of daily log returns over 252-day rolling window; resample with replacement to construct $H$-day cumulative returns, histogram over log-moneyness. No parametric (GARCH/GBM) component.
-5. **$Q_{\mathrm{prev}}$** → Constant maturity: interpolate previous day's fitted surface to $\tau$ days to expiry, recover $Q_{\mathrm{prev}}$ on same grid. (Config: `distances.use_constant_maturity_q_prev: true`.)
+5. **$Q_{\text{prev}}$** → Constant maturity: interpolate previous day's fitted surface to $\tau$ days to expiry, recover $Q_{\text{prev}}$ on same grid. (Config: `distances.use_constant_maturity_q_prev: true`.)
 6. **Distances** → $W_1$, $W_2$ via quantile-based formulas [Villani (2003)]
 
 **Formulas (1D):**
 
-$W_1(\mu, \nu) = \int_0^1 |F_\mu^{-1}(u) - F_\nu^{-1}(u)|\, du$
+$$
+W_1(\mu, \nu) = \int_0^1 |F_\mu^{-1}(u) - F_\nu^{-1}(u)|\, du
+$$
 
-$W_2(\mu, \nu) = \sqrt{\int_0^1 (F_\mu^{-1}(u) - F_\nu^{-1}(u))^2\, du}$
+$$
+W_2(\mu, \nu) = \sqrt{\int_0^1 (F_\mu^{-1}(u) - F_\nu^{-1}(u))^2\, du}
+$$
 
 ---
 

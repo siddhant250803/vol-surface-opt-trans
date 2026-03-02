@@ -6,7 +6,7 @@
 
 ## Definitions
 
-See [../../docs/VRP_DEFINITIONS.md](../../docs/VRP_DEFINITIONS.md) for full VRP specification (units, horizons, SVI total variance vs ATM IV). Summary: $VRP_{t,H} = RV_{t,\mathrm{ann}} - IV^2_{t,\mathrm{ann}}$ with horizon-matched annualization. Stress = top decile of forward $RV_{t,\mathrm{ann}}$.
+See [../../docs/VRP_DEFINITIONS.md](../../docs/VRP_DEFINITIONS.md) for full VRP specification (units, horizons, SVI total variance vs ATM IV). Summary: $VRP_{t,H} = RV_{t,\text{ann}} - IV^2_{t,\text{ann}}$ with horizon-matched annualization. Stress = top decile of forward $RV_{t,\text{ann}}$.
 
 ---
 
@@ -26,7 +26,9 @@ We fit an **SVI** model [3] to the implied volatility smile for each expiry. SVI
 
 From the fitted SVI, we compute call prices on a fine grid of log-moneyness $k = \ln(K/F)$. Then we apply **Breeden–Litzenberger** [1]: the risk-neutral PDF is the second derivative of the call price with respect to strike. In log-moneyness space:
 
-$q(k) = \frac{e^{rT}\left(\frac{\partial^2 c}{\partial k^2} - \frac{\partial c}{\partial k}\right)}{e^k}$
+$$
+q(k) = \frac{e^{rT}\left(\frac{\partial^2 c}{\partial k^2} - \frac{\partial c}{\partial k}\right)}{e^k}
+$$
 
 where $c = C/F$. We use **central finite differences** for the derivatives; clip negative density and renormalize. No analytic SVI derivatives.
 
@@ -47,9 +49,9 @@ For 1D distributions, the $p$-Wasserstein distance has a closed form using quant
 
 ## Findings
 
-### $W_1(Q, Q_{\mathrm{prev}})$ and the variance risk premium
+### $W_1(Q, Q_{\text{prev}})$ and the variance risk premium
 
-We observe a **positive association in-sample** between $W_1(Q, Q_{\mathrm{prev}})$ and forward VRP (correlation $\approx 0.54$). High $W_1$ → surface in flux → RV tends to beat IV. Low $W_1$ → stable surface → RV tends to be at or below IV. Subperiod robustness not yet validated.
+We observe a **positive association in-sample** between $W_1(Q, Q_{\text{prev}})$ and forward VRP (correlation $\approx 0.54$). High $W_1$ → surface in flux → RV tends to beat IV. Low $W_1$ → stable surface → RV tends to be at or below IV. Subperiod robustness not yet validated.
 
 ### $W_2(Q, P)$ as regime proxy
 

@@ -24,19 +24,19 @@ $RV_h = \sum r_i^2$ for returns spanning $\geq h$ calendar days
 
 **Annualized:**
 
-$RV_{ann} = RV_h \times (365 / \mathrm{span\_days})$
+$RV_{\text{ann}} = RV_h \times (365 / \text{span\_days})$
 
 **Typical magnitudes:** $RV_{ann} \approx 0.02\text{--}0.15$ (annualized variance). $\sqrt{RV_{ann}} \approx 15\text{--}40\%$ vol.
 
 ### Implied Variance (IV²)
 
-**From SVI:** $\mathrm{atm\_iv}$ = total variance $w = IV^2 \times \tau$ ($\tau$ in years).
+**From SVI:** `atm_iv` = total variance $w = IV^2 \times \tau$ ($\tau$ in years).
 
 **Annualized:**
 
-$IV^2_{ann} = \mathrm{atm\_iv} / \tau$
+$IV^2_{\text{ann}} = \text{atm\_iv} / \tau$
 
-For 7D: $\tau = 7/365$, so $IV^2_{ann} = \mathrm{atm\_iv} \times (365/7)$.
+For 7D: $\tau = 7/365$, so $IV^2_{\text{ann}} = \text{atm\_iv} \times (365/7)$.
 
 **Typical magnitudes:** $IV^2_{ann} \approx 0.02\text{--}0.10$. $\sqrt{IV^2_{ann}} \approx 15\text{--}32\%$ vol.
 
@@ -45,7 +45,7 @@ For 7D: $\tau = 7/365$, so $IV^2_{ann} = \mathrm{atm\_iv} \times (365/7)$.
 **Same scale:** Both annualized variance. Typical range: $-0.05$ to $0.05$.
 
 **Red flags:**
-- $\mathrm{Mean}(\mathrm{RV} - \mathrm{IV}^2) > 0.5$ → unit mismatch
+- $\text{Mean}(\text{RV} - \text{IV}^2) > 0.5$ → unit mismatch
 - $\sqrt{RV_{ann}} > 2$ (200% vol) → returns likely in percent
 
 ## Data Frequency Caveat
