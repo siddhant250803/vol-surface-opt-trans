@@ -1,0 +1,12 @@
+data:
+  options_path: "Group 4 MS&E244/Options/spx-weeklies-filtered.csv"
+  rates_path: "Group 4 MS&E244/Risk-Free/yield_panel_daily_frequency_monthly_maturity.csv"
+  date_min: "2005-10-28"
+  date_max: "2023-02-24"
+
+filters:
+  min_volume: 0
+  min_open_interest: 0
+  max_bid_ask_spread_pct: 0.5
+  min_strikes_per_expiry: 5
+  exclude_zero_bid: true

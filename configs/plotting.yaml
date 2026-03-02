@@ -1,0 +1,5 @@
+plotting:
+  dpi: 150
+  format: png
+  time_series_x: date
+  heatmap_cmap: viridis

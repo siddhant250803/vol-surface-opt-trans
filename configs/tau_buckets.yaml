@@ -1,0 +1,6 @@
+tau_buckets:
+  - {target_days: 7, label: "7D", tolerance_days: 3}
+  - {target_days: 14, label: "14D", tolerance_days: 4}
+  - {target_days: 30, label: "30D", tolerance_days: 5}
+  - {target_days: 60, label: "60D", tolerance_days: 7}
+  - {target_days: 90, label: "90D", tolerance_days: 10}

@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Decile Chart — SPX Vol Surface OT</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 24px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+           background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); color: #1e293b; line-height: 1.6; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .chart { background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+             padding: 20px; margin-bottom: 24px; overflow: hidden; }
+    .caption { font-size: 0.9rem; color: #64748b; margin-top: 12px; padding: 0 4px; }
+    h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 8px; color: #0f172a; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="chart">
+    <h1>Variance Risk Premium by W1 Decile</h1>
+    <div id="plot" style="width:100%;height:420px;"></div>
+    <p class="caption">D1 (low W1): stable surface, RV ≈ IV. D10 (high W1): surface in flux, RV tends to beat IV. Spread ≈ 0.17.</p>
+  </div>
+  <script>
+    Plotly.newPlot("plot", [{"x": ["D1", "D10", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9"], "y": [-0.0038879176425822334, 0.1674907782445921, 0.00024094446056940509, -0.0004824884153774626, 0.005619390915095137, 0.019001286006644982, -0.0008470054534522819, 0.008254676857977246, 0.013031591784292126, 0.008540504141906342], "type": "bar", "marker": {"color": ["#3b82f6", "#ef4444", "#ef4444", "#3b82f6", "#ef4444", "#ef4444", "#3b82f6", "#ef4444", "#ef4444", "#ef4444"], "line": {"color": "#1e293b", "width": 1}}, "text": ["-0.0039", "0.1675", "0.0002", "-0.0005", "0.0056", "0.0190", "-0.0008", "0.0083", "0.0130", "0.0085"], "textposition": "outside"}], {"title": {"text": "Mean(RV \u2212 IV\u00b2) by Decile of W1(Q, Q_prev)", "font": {"size": 18}}, "paper_bgcolor": "rgba(0,0,0,0)", "plot_bgcolor": "rgba(255,255,255,0.9)", "xaxis": {"title": "Decile (D1=low W1, D10=high W1)", "gridcolor": "#e2e8f0"}, "yaxis": {"title": "Mean(RV \u2212 IV\u00b2)", "gridcolor": "#e2e8f0", "zeroline": true}, "margin": {"l": 60, "r": 40, "b": 60, "t": 60}, "showlegend": false, "annotations": [{"x": 0.5, "y": 1.08, "xref": "paper", "yref": "paper", "text": "High W1 \u2192 RV tends to exceed IV", "showarrow": false, "font": {"size": 12}}]}, {responsive: true});
+  </script>
+
+</div>
+</body>
+</html>

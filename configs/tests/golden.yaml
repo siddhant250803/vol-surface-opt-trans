@@ -1,0 +1,62 @@
+# Golden test config: 3 anchor dates + neighbors, 7D and 30D only
+# Anchor dates: first trading day in 2017-06, 2020-03, 2022-10
+seed: 42
+config_name: golden
+extends: ["../data", "../tau_buckets", "../svi", "../density", "../physical", "../distances", "../experiments"]
+
+svi:
+  vega_weighted_price_error: false  # set true for price calibration; false gets 2017 fits
+
+# Override: restrict to golden dates (anchors + t-1, t+1)
+data:
+  options_path: "Group 4 MS&E244/Options/spx-weeklies-filtered.csv"
+  rates_path: "Group 4 MS&E244/Risk-Free/yield_panel_daily_frequency_monthly_maturity.csv"
+  # Anchor dates (first trading day in each month)
+  anchor_dates:
+    - "2017-06-02"
+    - "2020-03-06"
+    - "2022-10-07"
+  include_neighbor_dates: true
+  date_min: "2017-05-01"
+  date_max: "2022-11-30"
+
+filters:
+  min_volume: 0
+  min_open_interest: 0
+  max_bid_ask_spread_pct: 0.5
+  min_strikes_per_expiry: 20
+  exclude_zero_bid: true
+  require_both_puts_and_calls: true
+
+tau_buckets:
+  - {target_days: 7, label: "7D", tolerance_days: 3}
+  - {target_days: 30, label: "30D", tolerance_days: 5}
+
+physical:
+  window_days: 52
+
+fit:
+  iv_rmse_max: 0.9
+  density_mass_error_max: 0.02
+  density_neg_mass_max: 0.05
+  density_clip_frac_max: 0.05
+
+golden:
+  enabled: true
+  output_subdir: "golden"
+  assertions:
+    min_strikes: 20
+    r_annual_min: -0.02
+    r_annual_max: 0.15
+    iv_rmse_max: 0.9
+    fitted_iv_std_min: 0.001
+    q_integral_min: 0.995
+    q_integral_max: 1.005
+    neg_mass_max: 0.01
+    clip_frac_max: 0.01
+    w1_qq_min_nonzero: 0  # set to 1e-6 once OT/Q_prev alignment is fixed
+    rv_nonnull_min_frac: 0.5
+
+logging:
+  level: DEBUG
+  log_config_hash: true

@@ -1,0 +1,11 @@
+density:
+  k_grid:
+    n_points: 201
+    k_min: -0.5
+    k_max: 0.5
+  diff_method: "central"
+  clip_negative: false  # diagnostic only, not main step
+  renormalize: true
+  debug_plot_on_fail: true
+  # Preferred: C from SVI is convex by construction; differentiate directly.
+  # convex_smooth: optional convex hull fit if numerical noise breaks convexity

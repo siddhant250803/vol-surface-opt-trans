@@ -1,0 +1,11 @@
+.venv/
+.DS_Store
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+outputs/cache/
+outputs/features/*.parquet
+data/

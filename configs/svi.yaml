@@ -1,0 +1,12 @@
+svi:
+  fit_total_variance: true
+  param_bounds:
+    a: [1e-8, 0.5]
+    b: [1e-8, 0.5]
+    rho: [-0.99, 0.99]
+    m: [-0.5, 0.5]
+    sigma: [1e-6, 0.5]
+  init_strategy: "raw_moments"
+  max_iter: 1000
+  no_arb_check: true
+  vega_weighted: true

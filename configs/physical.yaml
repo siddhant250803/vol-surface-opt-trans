@@ -1,0 +1,6 @@
+physical:
+  window_days: 252
+  bootstrap_n: 1000
+  use_garch: false
+  garch_p: 1
+  garch_q: 1

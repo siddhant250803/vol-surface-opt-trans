@@ -1,0 +1,16 @@
+distances:
+  use_constant_maturity_q_prev: true  # Q_prev = Q_7D(t-1) by expiry interpolation
+  svi_params:
+    normalize: true
+    param_weights: [10.0, 5.0, 2.0, 5.0, 5.0]  # (a, b, rho, m, sigma)
+  metrics:
+    - wasserstein_1
+    - wasserstein_2
+    - quantile_gap_50
+    - quantile_gap_90
+    - tail_mass_gap_left
+    - tail_mass_gap_right
+    - moment_diff_1
+    - moment_diff_2
+  quantile_levels: [0.05, 0.25, 0.5, 0.75, 0.95]
+  tail_mass_levels: [0.01, 0.05, 0.95, 0.99]

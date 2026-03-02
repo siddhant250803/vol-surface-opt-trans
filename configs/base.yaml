@@ -1,0 +1,12 @@
+seed: 42
+config_name: base
+extends: [data, tau_buckets, svi, density, physical, distances, experiments]
+
+# Fail-fast thresholds (relax iv_rmse_max while debugging; tighten once stable)
+fit:
+  iv_rmse_max: 0.9
+  density_mass_error_max: 0.01
+
+logging:
+  level: INFO
+  log_config_hash: true

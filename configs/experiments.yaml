@@ -1,0 +1,12 @@
+experiments:
+  A_q_vs_q:
+    enabled: true
+    horizons: [1]
+    targets:
+      - atm_iv_change
+      - skew_change
+  B_q_vs_p:
+    enabled: true
+    rv_horizon_days: [5, 7, 10, 21]
+  C_model_error:
+    enabled: false
