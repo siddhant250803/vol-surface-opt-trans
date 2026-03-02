@@ -1,27 +1,37 @@
 # SPX Vol Surface — Optimal Transport Analysis
 
-Optimal transport ($W_1$, $W_2$) applied to SPX options: risk-neutral vs physical distributions, variance risk premium, and regime detection.
+Optimal transport ($W_1$, $W_2$) applied to SPX options: risk-neutral vs physical distributions, variance risk premium, and regime proxy.
+
+---
+
+## Definitions
+
+- **$RV_H$**: Horizon variance = $\sum_{i} r_i^2$ over log returns spanning $\geq H$ calendar days
+- **$RV_{ann}$**: $RV_H \times (365 / \mathrm{span\_days})$ (annualized variance)
+- **$IV^2_{ann}$**: $\mathrm{atm\_iv} / \tau$ where $\tau$ = time to expiry in years (SVI total variance $w = IV^2 \times \tau$)
+- **VRP**: $RV_{ann} - IV^2_{ann}$ (both annualized; same 7D horizon)
+- **Stress**: Top decile of forward 7D $RV_{ann}$. Calm = bottom decile.
 
 ---
 
 ## Overview
 
-We compare **risk-neutral ($Q$)** and **physical ($P$)** distributions from SPX options using Wasserstein distances. Main outputs:
+We compare **risk-neutral ($Q$)** and **physical ($P$)** distributions from SPX options using Wasserstein distances.
 
-- **$W_1(Q, Q_{\text{prev}})$** — surface shift proxy, correlates with forward $\mathrm{RV} - \mathrm{IV}^2$ ($\approx 0.54$)
-- **$W_2(Q, P)$** — regime proxy, spikes in stress (Mar 2020, Oct 2022)
+- **$W_1(Q, Q_{\mathrm{prev}})$** — surface shift proxy. We observe a positive association in-sample with forward VRP (correlation $\approx 0.54$).
+- **$W_2(Q, P)$** — Q–P divergence. Under our bootstrap $P$, $W_2$ is *lower* in stress (top RV decile) than calm; see [DIAGNOSTICS](outputs/report/ot_findings/DIAGNOSTICS.md).
 
-$Q$ recovered via Breeden–Litzenberger; $P$ via bootstrap of historical returns.
+$Q$ recovered via Breeden–Litzenberger; $P$ via iid bootstrap of historical returns (see Methodology).
 
 ---
 
-## Main Discoveries
+## Main Findings
 
 | Metric | Meaning | Finding |
 |--------|---------|---------|
-| **W1(Q, Q_prev)** | Risk-neutral density change day-to-day | High W1 → RV tends to exceed IV; low W1 → RV ≈ IV |
-| **W2(Q, P)** | Q–P divergence | Higher in stress than calm periods |
-| **Decile spread** | $D_{10} - D_1$ mean($\mathrm{RV} - \mathrm{IV}^2$) | $\approx 0.17$ ($D_1 \approx -0.004$, $D_{10} \approx 0.17$) |
+| **$W_1(Q, Q_{\mathrm{prev}})$** | Risk-neutral density change day-to-day | High $W_1$ → RV tends to exceed IV; low $W_1$ → RV $\approx$ IV. In-sample association only. |
+| **$W_2(Q, P)$** | Q–P divergence | Regime proxy. Lower in stress than calm under our $P$; see diagnostics. |
+| **Decile spread** | $D_{10} - D_1$ mean(VRP) | $\approx 0.17$ ($D_1 \approx -0.004$, $D_{10} \approx 0.17$) when sorted by $W_1$. |
 
 ---
 
@@ -38,10 +48,11 @@ $Q$ recovered via Breeden–Litzenberger; $P$ via bootstrap of historical return
 ## Methodology
 
 1. **SVI fit** → implied vol surface [Gatheral & Jacquier (2014)]
-2. **Call prices** → from SVI  
-3. **Q recovery** → Breeden–Litzenberger ($\partial^2 C/\partial K^2$) [Breeden & Litzenberger (1978)]
-4. **P estimation** → bootstrap of historical returns  
-5. **Distances** → W1, W2 via quantile-based formulas [Villani (2003)]
+2. **Call prices** → from SVI
+3. **Q recovery** → Breeden–Litzenberger ($q(K) = e^{rT} \partial^2 C/\partial K^2$). Central finite differences on call prices; clip negative density, renormalize. No analytic SVI derivatives.
+4. **P estimation** → Iid bootstrap of daily log returns over 252-day rolling window; resample with replacement to construct $H$-day cumulative returns, histogram over log-moneyness. No parametric (GARCH/GBM) component.
+5. **$Q_{\mathrm{prev}}$** → Constant maturity: interpolate previous day's fitted surface to $\tau$ days to expiry, recover $Q_{\mathrm{prev}}$ on same grid. (Config: `distances.use_constant_maturity_q_prev: true`.)
+6. **Distances** → $W_1$, $W_2$ via quantile-based formulas [Villani (2003)]
 
 **Formulas (1D):**
 
@@ -51,11 +62,12 @@ $W_2(\mu, \nu) = \sqrt{\int_0^1 (F_\mu^{-1}(u) - F_\nu^{-1}(u))^2\, du}$
 
 ---
 
-## References
+## Limitations
 
-- Breeden, D.T. & Litzenberger, R.H. (1978). Prices of state-contingent claims implicit in option prices. *Journal of Business*, 51(4), 621–651.
-- Gatheral, J. & Jacquier, A. (2014). Arbitrage-free SVI volatility surfaces. *Quantitative Finance*, 14(1), 59–71.
-- Villani, C. (2003). *Topics in Optimal Transportation*. AMS.
+- Only 7D $Q$ in main analysis; cross-tenor pending.
+- $P$ is simplified bootstrap; richer models (GARCH, jumps) may change $W_2$ interpretation.
+- No transaction-cost modeling; strategy backtests are next.
+- Subperiod robustness of $W_1$–VRP association not yet validated.
 
 ---
 
@@ -73,6 +85,14 @@ PYTHONPATH=. python scripts/generate_ot_report.py
 PYTHONPATH=. python scripts/rv_iv_analysis.py
 ```
 
-**Outputs:** `outputs/report/ot_findings/` (HTML, PNG) · `outputs/report/factor/` (PNG) · `outputs/cache/` · `outputs/features/`
+**Reproducibility:** Config hash in `outputs/cache/{hash}/`. Key knobs: `configs/tau_buckets.yaml`, `configs/physical.yaml` (window_days, bootstrap_n), `configs/density.yaml` (k_grid). Cache can be disabled with `--skip-cache` on pipeline run. Bootstrap uses `seed` from `configs/base.yaml`.
 
+**Outputs:** `outputs/report/ot_findings/` (HTML, PNG, DIAGNOSTICS.md) · `outputs/report/factor/` (PNG) · `outputs/cache/` · `outputs/features/`
 
+---
+
+## References
+
+- Breeden, D.T. & Litzenberger, R.H. (1978). Prices of state-contingent claims implicit in option prices. *Journal of Business*, 51(4), 621–651.
+- Gatheral, J. & Jacquier, A. (2014). Arbitrage-free SVI volatility surfaces. *Quantitative Finance*, 14(1), 59–71.
+- Villani, C. (2003). *Topics in Optimal Transportation*. AMS.

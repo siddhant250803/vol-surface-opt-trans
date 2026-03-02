@@ -428,6 +428,47 @@ def _generate_w1_vs_rv_iv_scatter(feat: pl.DataFrame, report_dir: Path) -> None:
         pass
 
 
+def _write_diagnostics(
+    feat: pl.DataFrame | None, dist: pl.DataFrame, report_dir: Path
+) -> None:
+    """Write W2 vs stress diagnostic: avg W2 in top vs bottom RV decile."""
+    lines = [
+        "# Diagnostics",
+        "",
+        "## W2(Q,P) vs stress (forward RV decile)",
+        "",
+        "Stress = top decile of forward 7D annualized RV. Calm = bottom decile.",
+        "",
+    ]
+    if feat is None or feat.is_empty() or "w2_q_p" not in feat.columns or "rv_ann" not in feat.columns:
+        lines.append("*(Run pipeline with features to populate.)*")
+    else:
+        sub = feat.filter(pl.col("tau_bucket") == "7D").filter(
+            pl.col("w2_q_p").is_not_null() & pl.col("rv_ann").is_not_null()
+        )
+        if len(sub) < 20:
+            lines.append("*(Insufficient data.)*")
+        else:
+            sub = sub.with_columns(
+                pl.col("rv_ann").qcut(10, labels=[f"RV_D{i}" for i in range(1, 11)]).alias("rv_decile")
+            )
+            calm = sub.filter(pl.col("rv_decile") == "RV_D1")
+            stress = sub.filter(pl.col("rv_decile") == "RV_D10")
+            w2_calm = float(calm["w2_q_p"].mean()) if len(calm) > 0 else float("nan")
+            w2_stress = float(stress["w2_q_p"].mean()) if len(stress) > 0 else float("nan")
+            lines.append("| Regime | Mean W2(Q,P) | n |")
+            lines.append("|--------|--------------|---|")
+            lines.append(f"| Calm (bottom RV decile) | {w2_calm:.5f} | {len(calm)} |")
+            lines.append(f"| Stress (top RV decile) | {w2_stress:.5f} | {len(stress)} |")
+            lines.append("")
+            if not (np.isnan(w2_stress) or np.isnan(w2_calm)):
+                diff = w2_stress - w2_calm
+                direction = "higher" if diff > 0 else "lower"
+                lines.append(f"W2 is {direction} in stress than calm (diff = {diff:.5f}).")
+    report_dir.mkdir(parents=True, exist_ok=True)
+    (report_dir / "DIAGNOSTICS.md").write_text("\n".join(lines), encoding="utf-8")
+
+
 def main() -> None:
     project_root = Path(__file__).resolve().parent.parent
     config = load_config(project_root / "configs" / "base.yaml")
@@ -459,10 +500,14 @@ def main() -> None:
         _generate_decile_chart(feat_prep, report_dir)
         _generate_w1_vs_rv_iv_scatter(feat_prep, report_dir)
 
+    # W2 vs stress diagnostic (avg W2 in top vs bottom RV decile)
+    _write_diagnostics(feat_prep, dist, report_dir)
+
     print(f"Visuals saved to {report_dir}")
     print("  - surfaces_q_vs_p_7d.html, surfaces_comparison_7d.html")
     print("  - w1_w2_timeseries.html, decile_chart.html, decile_chart.png")
     print("  - w1_vs_rv_iv_scatter.html")
+    print("  - DIAGNOSTICS.md")
 
 
 if __name__ == "__main__":
