@@ -1,7 +1,7 @@
 # SPX Vol Surface - Optimal Transport Analysis
 
 **W₁/W₂ optimal transport on SPX vol surfaces: comparing risk-neutral vs physical densities, variance risk premium, and regime proxy.**
-
+![W2 Gaussian](outputs/report/ot_findings/ot_w2_map.png) ![W1 Gaussian](outputs/report/ot_findings/ot_w1_map.png)
 ---
 
 ## Definitions
@@ -42,8 +42,6 @@ $Q$ recovered via Breeden–Litzenberger; $P$ via iid bootstrap of historical re
 ![W1 time series](outputs/report/factor/w1_q_vs_q_ts.png) ![W2 time series](outputs/report/factor/w2_q_vs_p_ts.png)
 
 ![Decile chart](outputs/report/ot_findings/decile_chart.png) ![W1 vs RV-IV](outputs/report/ot_findings/w1_vs_rv_iv_scatter.png)
-
-![W2 Gaussian](outputs/report/ot_findings/ot_w2_map.png) ![W1 Gaussian](outputs/report/ot_findings/ot_w1_map.png)
 
 **Interactive:** [w1_w2_timeseries](outputs/report/ot_findings/w1_w2_timeseries.html) · [decile_chart](outputs/report/ot_findings/decile_chart.html) · [w1_vs_rv_iv](outputs/report/ot_findings/w1_vs_rv_iv_scatter.html) · [3D surfaces](outputs/report/ot_findings/surfaces_q_vs_p_7d.html) · [ot_w2_map](outputs/report/ot_findings/ot_w2_map.html) · [ot_w1_map](outputs/report/ot_findings/ot_w1_map.html)
 
