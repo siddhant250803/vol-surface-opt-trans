@@ -16,6 +16,7 @@ dependencies = [
 [project.optional-dependencies]
 garch = ["arch>=6.0"]
 dev = ["pytest>=7.0", "ruff>=0.1"]
+gaussian-demo = ["plotly>=5.0", "pot>=0.9", "kaleido>=0.2"]
 
 [project.scripts]
 

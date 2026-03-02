@@ -1,5 +1,7 @@
 # SPX Vol Surface - Optimal Transport Analysis
 
+**W₁/W₂ optimal transport on SPX vol surfaces: comparing risk-neutral vs physical densities, variance risk premium, and regime proxy.**
+
 Optimal transport ($`W_1`$, $`W_2`$) applied to SPX options: risk-neutral vs physical distributions, variance risk premium, and regime proxy.
 
 ---
@@ -43,7 +45,9 @@ $Q$ recovered via Breeden–Litzenberger; $P$ via iid bootstrap of historical re
 
 ![Decile chart](outputs/report/ot_findings/decile_chart.png) ![W1 vs RV-IV](outputs/report/ot_findings/w1_vs_rv_iv_scatter.png)
 
-**Interactive:** [w1_w2_timeseries](outputs/report/ot_findings/w1_w2_timeseries.html) · [decile_chart](outputs/report/ot_findings/decile_chart.html) · [w1_vs_rv_iv](outputs/report/ot_findings/w1_vs_rv_iv_scatter.html) · [3D surfaces](outputs/report/ot_findings/surfaces_q_vs_p_7d.html)
+![W2 Gaussian](outputs/report/ot_findings/ot_w2_map.png) ![W1 Gaussian](outputs/report/ot_findings/ot_w1_map.png)
+
+**Interactive:** [w1_w2_timeseries](outputs/report/ot_findings/w1_w2_timeseries.html) · [decile_chart](outputs/report/ot_findings/decile_chart.html) · [w1_vs_rv_iv](outputs/report/ot_findings/w1_vs_rv_iv_scatter.html) · [3D surfaces](outputs/report/ot_findings/surfaces_q_vs_p_7d.html) · [ot_w2_map](outputs/report/ot_findings/ot_w2_map.html) · [ot_w1_map](outputs/report/ot_findings/ot_w1_map.html)
 
 ---
 
@@ -94,6 +98,8 @@ PYTHONPATH=. python scripts/rv_iv_analysis.py
 **Reproducibility:** Config hash in `outputs/cache/{hash}/`. Key knobs: `configs/tau_buckets.yaml`, `configs/physical.yaml` (window_days, bootstrap_n), `configs/density.yaml` (k_grid). Cache can be disabled with `--skip-cache` on pipeline run. Bootstrap uses `seed` from `configs/base.yaml`.
 
 **Outputs:** `outputs/report/ot_findings/` (HTML, PNG, DIAGNOSTICS.md) · `outputs/report/factor/` (PNG) · `outputs/cache/` · `outputs/features/`
+
+**Gaussian W₁/W₂ demo:** `pip install -e ".[gaussian-demo]"` then `python scripts/gaussian_w1_w2_visualization.py` → `outputs/report/ot_findings/ot_w{1,2}_map.{html,png}`
 
 ---
 
