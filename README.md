@@ -9,7 +9,7 @@ Optimal transport ($W_1$, $W_2$) applied to SPX options: risk-neutral vs physica
 See [docs/VRP_DEFINITIONS.md](docs/VRP_DEFINITIONS.md) for full specification. Summary:
 
 - **Horizon $H$**: Fixed in calendar days (e.g., $H=7$). $\tau_t = H/365$ (years).
-- **SVI total variance** $w^{\mathrm{ATM}}_t = w_t(0,\tau_t)$ at ATM. **Annualized IV²**: $IV^2_{t,\mathrm{ann}} = w^{\mathrm{ATM}}_t / \tau_t$. **ATM IV** (vol): $IV_{t,\mathrm{ann}} = \sqrt{w^{\mathrm{ATM}}_t / \tau_t}$.
+- **SVI total variance** $ w^{\mathrm{ATM}}_t = w_t(0,\tau_t) $ at ATM. **Annualized IV²**: $IV^2_{t,\mathrm{ann}} = w^{\mathrm{ATM}}_t / \tau_t$. **ATM IV** (vol): $IV_{t,\mathrm{ann}} = \sqrt{w^{\mathrm{ATM}}_t / \tau_t}$.
 - **Forward RV**: $RV_{t,H} = \sum_i r_{t+i}^2$ over window spanning $\geq H$ calendar days. **Annualized**: $RV_{t,\mathrm{ann}} = RV_{t,H} \times (365 / \mathrm{span\_days}_t)$.
 - **VRP**: $VRP_{t,H} = RV_{t,\mathrm{ann}} - IV^2_{t,\mathrm{ann}}$ (both annualized; horizon-matched).
 - **Stress**: Top decile of forward $RV_{t,\mathrm{ann}}$. Calm = bottom decile.
