@@ -1,4 +1,8 @@
-"""SVI fit, no-arb checks, fit_status, IV_RMSE. IV decimal, w = iv²*T (years)."""
+"""SVI fit, no-arb checks, fit_status, IV_RMSE. IV decimal, w = iv²*T (years).
+
+Gatheral, J. & Jacquier, A. (2014). Arbitrage-free SVI volatility surfaces.
+Quantitative Finance, 14(1), 59–71.
+"""
 
 from __future__ import annotations
 

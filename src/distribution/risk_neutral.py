@@ -1,4 +1,9 @@
-"""Recover risk-neutral Q from call prices via Breeden-Litzenberger: q(K) = e^{rT} ∂²C/∂K²."""
+"""Recover risk-neutral Q from call prices via Breeden-Litzenberger.
+
+Breeden, D.T. & Litzenberger, R.H. (1978). Prices of state-contingent claims
+implicit in option prices. Journal of Business, 51(4), 621–651.
+q(K) = e^{rT} ∂²C/∂K².
+"""
 
 from __future__ import annotations
 

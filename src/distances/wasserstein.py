@@ -1,4 +1,8 @@
-"""W1, W2 quantile-based 1D Wasserstein."""
+"""W1, W2 quantile-based 1D Wasserstein.
+
+Formulas from Villani (2003), Topics in Optimal Transportation.
+For 1D: W_p(μ,ν) = (∫₀¹ |F_μ⁻¹(u) − F_ν⁻¹(u)|^p du)^(1/p).
+"""
 
 from __future__ import annotations
 
