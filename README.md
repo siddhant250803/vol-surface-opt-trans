@@ -2,8 +2,6 @@
 
 **W₁/W₂ optimal transport on SPX vol surfaces: comparing risk-neutral vs physical densities, variance risk premium, and regime proxy.**
 
-Optimal transport ($`W_1`$, $`W_2`$) applied to SPX options: risk-neutral vs physical distributions, variance risk premium, and regime proxy.
-
 ---
 
 ## Definitions
