@@ -2,7 +2,9 @@
 
 **Non-negotiable:** RV and IV² must be on the same scale for comparison.
 
-## Convention 2: Annualized Variance
+**Canonical VRP specification:** [VRP_DEFINITIONS.md](VRP_DEFINITIONS.md) (horizons, SVI total variance vs ATM IV, annualization).
+
+## Convention: Annualized Variance
 
 We use **annualized variance** for both RV and IV².
 

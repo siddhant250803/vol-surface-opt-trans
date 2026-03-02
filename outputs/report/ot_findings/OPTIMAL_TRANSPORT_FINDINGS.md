@@ -6,11 +6,7 @@
 
 ## Definitions
 
-- **$RV_H$**: Horizon variance = $\sum_i r_i^2$ over log returns spanning $\geq H$ calendar days
-- **$RV_{ann}$**: $RV_H \times (365 / \mathrm{span\_days})$ (annualized variance)
-- **$IV^2_{ann}$**: $\mathrm{atm\_iv} / \tau$ ($\tau$ = time to expiry in years)
-- **VRP**: $RV_{ann} - IV^2_{ann}$ (both annualized; same horizon)
-- **Stress**: Top decile of forward $RV_{ann}$. Calm = bottom decile.
+See [../../docs/VRP_DEFINITIONS.md](../../docs/VRP_DEFINITIONS.md) for full VRP specification (units, horizons, SVI total variance vs ATM IV). Summary: $VRP_{t,H} = RV_{t,\mathrm{ann}} - IV^2_{t,\mathrm{ann}}$ with horizon-matched annualization. Stress = top decile of forward $RV_{t,\mathrm{ann}}$.
 
 ---
 
