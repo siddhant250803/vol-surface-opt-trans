@@ -17,7 +17,7 @@ _HTML_HEAD = """
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{title} — SPX Vol Surface OT</title>
+  <title>{title} - SPX Vol Surface OT</title>
   <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
   <style>
     * {{ box-sizing: border-box; }}
@@ -209,7 +209,7 @@ def _generate_comparison_html(surface_data: dict, out_path: Path) -> None:
     tickvals = list(range(0, n_dates, step))
     ticktext = [surface_data["dates"][i][:10] for i in tickvals]
     layout = {
-        "title": {"text": "Q vs P Surfaces — 7D Tenor", "font": {"size": 18}},
+        "title": {"text": "Q vs P Surfaces - 7D Tenor", "font": {"size": 18}},
         "paper_bgcolor": "rgba(0,0,0,0)",
         "plot_bgcolor": "rgba(0,0,0,0)",
         "scene": {

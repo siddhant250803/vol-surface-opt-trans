@@ -17,41 +17,41 @@ We use **annualized variance** for both RV and IV².
 
 **Horizon variance (h days):**
 
-$RV_h = \sum r_i^2$ for returns spanning $\geq h$ calendar days
+$`RV_h = \sum r_i^2`$ for returns spanning $`\geq h`$ calendar days
 
-- $r_i$ = log returns (decimal)
+- $`r_i`$ = log returns (decimal)
 - Span = calendar days from first to last return in window
 
 **Annualized:**
 
-$RV_{\text{ann}} = RV_h \times (365 / \text{span\_days})$
+$`RV_{\text{ann}} = RV_h \times (365 / \text{span\_days})`$
 
-**Typical magnitudes:** $RV_{ann} \approx 0.02\text{--}0.15$ (annualized variance). $\sqrt{RV_{ann}} \approx 15\text{--}40\%$ vol.
+**Typical magnitudes:** $`RV_{\text{ann}} \approx 0.02\text{--}0.15`$ (annualized variance). $`\sqrt{RV_{\text{ann}}} \approx 15\text{--}40\%`$ vol.
 
 ### Implied Variance (IV²)
 
-**From SVI:** `atm_iv` = total variance $w = IV^2 \times \tau$ ($\tau$ in years).
+**From SVI:** `atm_iv` = total variance $`w = IV^2 \times \tau`$ ($`\tau`$ in years).
 
 **Annualized:**
 
-$IV^2_{\text{ann}} = \text{atm\_iv} / \tau$
+$`IV^2_{\text{ann}} = \text{atm\_iv} / \tau`$
 
-For 7D: $\tau = 7/365$, so $IV^2_{\text{ann}} = \text{atm\_iv} \times (365/7)$.
+For 7D: $`\tau = 7/365`$, so $`IV^2_{\text{ann}} = \text{atm\_iv} \times (365/7)`$.
 
-**Typical magnitudes:** $IV^2_{ann} \approx 0.02\text{--}0.10$. $\sqrt{IV^2_{ann}} \approx 15\text{--}32\%$ vol.
+**Typical magnitudes:** $`IV^2_{\text{ann}} \approx 0.02\text{--}0.10`$. $`\sqrt{IV^2_{\text{ann}}} \approx 15\text{--}32\%`$ vol.
 
 ### RV − IV²
 
 **Same scale:** Both annualized variance. Typical range: $-0.05$ to $0.05$.
 
 **Red flags:**
-- $\text{Mean}(\text{RV} - \text{IV}^2) > 0.5$ → unit mismatch
-- $\sqrt{RV_{ann}} > 2$ (200% vol) → returns likely in percent
+- $`\text{Mean}(\text{RV} - \text{IV}^2) > 0.5`$ → unit mismatch
+- $`\sqrt{RV_{\text{ann}}} > 2`$ (200% vol) → returns likely in percent
 
 ## Data Frequency Caveat
 
 With **weekly** options data, returns are ~weekly (7–14 day gaps). For 7-day RV:
-- We accumulate returns until span $\geq 7$ calendar days
+- We accumulate returns until span $`\geq 7`$ calendar days
 - Often 1 return spans 7 days → RV from 1 observation (noisy)
 - **Recommendation:** Use daily price data for robust RV.
 

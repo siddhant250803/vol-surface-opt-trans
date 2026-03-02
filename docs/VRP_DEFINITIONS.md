@@ -18,7 +18,7 @@ $$
 w_t(k,\tau) = \sigma_{t,\text{ann}}^2(k,\tau) \cdot \tau
 $$
 
-where $\sigma_{t,\text{ann}}(k,\tau)$ is the **annualized** implied volatility.
+where $`\sigma_{t,\text{ann}}(k,\tau)`$ is the **annualized** implied volatility.
 
 For the ATM point ($k=0$) at the target horizon $\tau_t$, define:
 
@@ -38,7 +38,7 @@ $$
 IV_{t,\text{ann}} = \sqrt{\frac{w^{\text{ATM}}_t}{\tau_t}}
 $$
 
-**Important:** In code and reporting, "ATM IV" must be distinguished from "ATM total variance." Ideally, `atm_iv` would represent $IV_{t,\text{ann}}$ (volatility). In this codebase, the variable `atm_iv` stores **total variance** $w^{\text{ATM}}_t$ (SVI raw); annualized IV² is computed as `atm_iv / tau`.
+**Important:** In code and reporting, "ATM IV" must be distinguished from "ATM total variance." Ideally, `atm_iv` would represent $`IV_{t,\text{ann}}`$ (volatility). In this codebase, the variable `atm_iv` stores **total variance** $`w^{\text{ATM}}_t`$ (SVI raw); annualized IV² is computed as `atm_iv / tau`.
 
 ---
 
@@ -50,7 +50,7 @@ $$
 r_{t+i} = \log\left(\frac{S_{t+i}}{S_{t+i-1}}\right)
 $$
 
-Let $t \to t+M$ denote the forward window whose calendar span is $\text{span\_days}_t \geq H$ (we choose $M$ such that the forward window spans at least $H$ calendar days; if the next $H$ calendar days include weekends/holidays, $M$ is the number of trading-day returns in that span).
+Let $t \to t+M$ denote the forward window whose calendar span is $`\text{span\_days}_t \geq H`$ (we choose $M$ such that the forward window spans at least $H$ calendar days; if the next $H$ calendar days include weekends/holidays, $M$ is the number of trading-day returns in that span).
 
 Define **forward realized variance** over that window:
 
@@ -66,7 +66,7 @@ $$
 RV_{t,\text{ann}} \equiv RV_{t,H} \times \frac{365}{\text{span\_days}_t}
 $$
 
-This makes $RV_{t,\text{ann}}$ directly comparable to $IV^2_{t,\text{ann}}$, since both are annualized variances.
+This makes $`RV_{t,\text{ann}}`$ directly comparable to $`IV^2_{t,\text{ann}}`$, since both are annualized variances.
 
 ---
 
@@ -80,8 +80,8 @@ $$
 
 **Interpretation:**
 
-- $VRP_{t,H} > 0$: realized variance over the forward horizon exceeds option-implied variance (implied was "cheap" relative to realized).
-- $VRP_{t,H} < 0$: realized variance falls below implied variance (implied was "rich" relative to realized).
+- $`VRP_{t,H} > 0`$: realized variance over the forward horizon exceeds option-implied variance (implied was "cheap" relative to realized).
+- $`VRP_{t,H} < 0`$: realized variance falls below implied variance (implied was "rich" relative to realized).
 
 ---
 
@@ -92,4 +92,4 @@ For each date $t$, the VRP uses:
 1. an options slice with maturity $\tau_t \approx H/365$ (bucketed by $\tau$), and
 2. a realized window whose calendar span matches the same horizon definition (at least $H$ calendar days, annualized by the actual span).
 
-This alignment is necessary; mixing "5 trading days" RV with "7 calendar day" options maturity without adjustment will bias $VRP_{t,H}$. 
+This alignment is necessary; mixing "5 trading days" RV with "7 calendar day" options maturity without adjustment will bias $`VRP_{t,H}`$. 
