@@ -21,9 +21,9 @@ See [docs/VRP_DEFINITIONS.md](docs/VRP_DEFINITIONS.md) for full specification. S
 We compare **risk-neutral ($Q$)** and **physical ($P$)** distributions from SPX options using Wasserstein distances.
 
 - **$`W_1(Q, Q_{\text{prev}})`$** - surface shift proxy. We observe a positive association in-sample with forward VRP (correlation $`\approx 0.54`$).
-- **$`W_2(Q, P)`$** - Q–P divergence. Under our bootstrap $`P`$, $`W_2`$ is *lower* in stress (top RV decile) than calm; see [DIAGNOSTICS](outputs/report/ot_findings/DIAGNOSTICS.md).
+- **$`W_2(Q, P)`$** - Q–P divergence. Under our FHS-GARCH $`P`$, $`W_2`$ is *lower* in stress (0.035) than calm (0.047); see [DIAGNOSTICS](outputs/report/ot_findings/DIAGNOSTICS.md).
 
-$Q$ recovered via Breeden–Litzenberger; $P$ via iid bootstrap of historical returns (see Methodology).
+$Q$ recovered via Breeden–Litzenberger; $P$ via FHS-GJR-GARCH (Filtered Historical Simulation with leverage GARCH; see Methodology).
 
 ---
 
@@ -32,7 +32,7 @@ $Q$ recovered via Breeden–Litzenberger; $P$ via iid bootstrap of historical re
 | Metric | Meaning | Finding |
 |--------|---------|---------|
 | **$`W_1(Q, Q_{\text{prev}})`$** | Risk-neutral density change day-to-day | High $`W_1`$ → RV tends to exceed IV; low $`W_1`$ → RV $`\approx`$ IV. In-sample association only. |
-| **$`W_2(Q, P)`$** | Q–P divergence | Regime proxy. Lower in stress than calm under our $`P`$; see diagnostics. |
+| **$`W_2(Q, P)`$** | Q–P divergence | Regime proxy. Calm: 0.047, Stress: 0.035 (lower in stress). |
 | **Decile spread** | $`D_{10} - D_1`$ mean(VRP) | $`\approx 0.17`$ ($`D_1 \approx -0.004`$, $`D_{10} \approx 0.17`$) when sorted by $`W_1`$. |
 
 ---
@@ -52,7 +52,7 @@ $Q$ recovered via Breeden–Litzenberger; $P$ via iid bootstrap of historical re
 1. **SVI fit** → implied vol surface [Gatheral & Jacquier (2014)]
 2. **Call prices** → from SVI
 3. **Q recovery** → Breeden–Litzenberger ($`q(K) = e^{rT} \partial^2 C/\partial K^2`$). Central finite differences on call prices; clip negative density, renormalize. No analytic SVI derivatives.
-4. **P estimation** → Iid bootstrap of daily log returns over 252-day rolling window; resample with replacement to construct $`H`$-day cumulative returns, histogram over log-moneyness. No parametric (GARCH/GBM) component.
+4. **P estimation** → FHS-GJR-GARCH: 252-day rolling window, fit GJR-GARCH(1,1), residual bootstrap, forward simulate to $`H`$-day cumulative returns, KDE over log-moneyness.
 5. **$`Q_{\text{prev}}`$** → Constant maturity: interpolate previous day's fitted surface to $`\tau`$ days to expiry, recover $`Q_{\text{prev}}`$ on same grid. (Config: `distances.use_constant_maturity_q_prev: true`.)
 6. **Distances** → $`W_1`$, $`W_2`$ via quantile-based formulas [Villani (2003)]
 
@@ -71,7 +71,7 @@ $$
 ## Limitations
 
 - Only 7D $`Q`$ in main analysis; cross-tenor pending.
-- $`P`$ is simplified bootstrap; richer models (GARCH, jumps) may change $`W_2`$ interpretation.
+- $`P`$ uses FHS-GJR-GARCH; jump-diffusion or other models may further refine $`W_2`$ interpretation.
 - No transaction-cost modeling; strategy backtests are next.
 - Subperiod robustness of $`W_1`$–VRP association not yet validated.
 
@@ -83,17 +83,21 @@ $$
 pip install -e .   # or: uv sync
 ```
 
-**Data:** Place options + yield CSVs per `configs/data.yaml`.
+**Data:** Place options + yield CSVs per `configs/data.yaml`. Default paths: `data/raw/Options/spx-weeklies-filtered.csv` and `data/raw/Risk-Free/yield_panel_daily_frequency_monthly_maturity.csv`.
 
 ```bash
-python -m pipeline.run --config configs/base.yaml
+python -m pipeline.run --config configs/base.yaml --skip-cache
 PYTHONPATH=. python scripts/generate_ot_report.py
-PYTHONPATH=. python scripts/rv_iv_analysis.py
+python scripts/gaussian_w1_w2_visualization.py
 ```
 
-**Reproducibility:** Config hash in `outputs/cache/{hash}/`. Key knobs: `configs/tau_buckets.yaml`, `configs/physical.yaml` (window_days, bootstrap_n), `configs/density.yaml` (k_grid). Cache can be disabled with `--skip-cache` on pipeline run. Bootstrap uses `seed` from `configs/base.yaml`.
+Or run all at once: `./scripts/run_full_pipeline.sh`
+
+**Reproducibility:** Config hash in `outputs/cache/{hash}/`. Key knobs: `configs/tau_buckets.yaml`, `configs/physical.yaml` (window_days, n_sims, garch_model), `configs/density.yaml` (k_grid). Cache can be disabled with `--skip-cache` on pipeline run. FHS uses `seed` from `configs/base.yaml`.
 
 **Outputs:** `outputs/report/ot_findings/` (HTML, PNG, DIAGNOSTICS.md) · `outputs/report/factor/` (PNG) · `outputs/cache/` · `outputs/features/`
+
+**Note:** After the pipeline, run `generate_ot_report.py` and `gaussian_w1_w2_visualization.py` for full visuals (3D surfaces, decile chart, W1/W2 maps). P estimation (Stage 7) takes ~100 min with `n_sims=10000`; reduce to 2000 in `configs/physical.yaml` for faster runs (~20 min).
 
 **Gaussian W₁/W₂ demo:** `pip install -e ".[gaussian-demo]"` then `python scripts/gaussian_w1_w2_visualization.py` → `outputs/report/ot_findings/ot_w{1,2}_map.{html,png}`
 

@@ -1,0 +1,9 @@
+# Example: copy to data_local.yaml and set your paths.
+# Run: python -m pipeline.run --config configs/base.yaml
+# (base.yaml extends data; create a variant that extends data_local instead)
+#
+# data:
+#   options_path: "path/to/spx-weeklies-filtered.csv"
+#   rates_path: "path/to/yield_panel_daily_frequency_monthly_maturity.csv"
+#   date_min: "2005-10-28"
+#   date_max: "2023-02-24"

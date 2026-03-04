@@ -1,6 +1,6 @@
 physical:
+  # FHS-GJR-GARCH (replaces iid bootstrap)
   window_days: 252
-  bootstrap_n: 1000
-  use_garch: false
-  garch_p: 1
-  garch_q: 1
+  n_sims: 10000
+  garch_model: "GJR"
+  garch_dist: "t"

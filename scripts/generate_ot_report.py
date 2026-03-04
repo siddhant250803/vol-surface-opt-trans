@@ -164,7 +164,7 @@ def _generate_3d_html(surface_data: dict, out_path: Path) -> None:
   <div class="chart">
     <h1>Risk-Neutral (Q) vs Physical (P) Surfaces</h1>
     <div id="plot" style="width:100%;height:720px;"></div>
-    <p class="caption">Blue: Q (options-implied). Orange: P (historical bootstrap). The vertical gap between surfaces is the local Q–P divergence.</p>
+    <p class="caption">Blue: Q (options-implied). Orange: P (FHS-GJR-GARCH). The vertical gap between surfaces is the local Q–P divergence.</p>
   </div>
   <script>
     var qTrace = """ + json.dumps(q_trace) + """;
@@ -228,7 +228,7 @@ def _generate_comparison_html(surface_data: dict, out_path: Path) -> None:
   <div class="chart">
     <h1>Risk-Neutral (Q) vs Physical (P) Surfaces</h1>
     <div id="plot" style="width:100%;height:800px;"></div>
-    <p class="caption">Blue: Q (options-implied). Red: P (historical bootstrap). W1/W2 measure the optimal transport distance between these surfaces.</p>
+    <p class="caption">Blue: Q (options-implied). Red: P (FHS-GJR-GARCH). W1/W2 measure the optimal transport distance between these surfaces.</p>
   </div>
   <script>
     Plotly.newPlot("plot", [""" + json.dumps(q_trace) + """, """ + json.dumps(p_trace) + """], """ + json.dumps(layout) + """, {responsive: true});
@@ -434,6 +434,8 @@ def _write_diagnostics(
     """Write W2 vs stress diagnostic: avg W2 in top vs bottom RV decile."""
     lines = [
         "# Diagnostics",
+        "",
+        "*Auto-generated. P from FHS-GJR-GARCH.*",
         "",
         "## W2(Q,P) vs stress (forward RV decile)",
         "",

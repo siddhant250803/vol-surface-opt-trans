@@ -1,6 +1,6 @@
 data:
-  options_path: "Group 4 MS&E244/Options/spx-weeklies-filtered.csv"
-  rates_path: "Group 4 MS&E244/Risk-Free/yield_panel_daily_frequency_monthly_maturity.csv"
+  options_path: "data/raw/Options/spx-weeklies-filtered.csv"
+  rates_path: "data/raw/Risk-Free/yield_panel_daily_frequency_monthly_maturity.csv"
   date_min: "2005-10-28"
   date_max: "2023-02-24"
 

@@ -9,8 +9,8 @@ svi:
 
 # Override: restrict to golden dates (anchors + t-1, t+1)
 data:
-  options_path: "Group 4 MS&E244/Options/spx-weeklies-filtered.csv"
-  rates_path: "Group 4 MS&E244/Risk-Free/yield_panel_daily_frequency_monthly_maturity.csv"
+  options_path: "data/raw/Options/spx-weeklies-filtered.csv"
+  rates_path: "data/raw/Risk-Free/yield_panel_daily_frequency_monthly_maturity.csv"
   # Anchor dates (first trading day in each month)
   anchor_dates:
     - "2017-06-02"
@@ -34,6 +34,7 @@ tau_buckets:
 
 physical:
   window_days: 52
+  n_sims: 5000
 
 fit:
   iv_rmse_max: 0.9

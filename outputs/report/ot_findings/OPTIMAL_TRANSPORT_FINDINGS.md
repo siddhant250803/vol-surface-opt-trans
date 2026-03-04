@@ -34,7 +34,7 @@ where $c = C/F$. We use **central finite differences** for the derivatives; clip
 
 ### 3. Estimate the physical distribution P
 
-**$`P`$ is an iid bootstrap of daily log returns** over a 252-day rolling window. We resample with replacement to construct $`H`$-day cumulative returns, then histogram over log-moneyness. Same grid as $`Q`$. No parametric (GARCH/GBM) component. Richer $`P`$ models would change $`W_2`$ interpretation.
+**$`P`$ is built via FHS-GJR-GARCH** (Filtered Historical Simulation with GJR-GARCH(1,1)): 252-day rolling window of daily log returns, fit GJR-GARCH with Student-t innovations, residual bootstrap of standardized residuals, forward simulate to $`H`$-day cumulative returns, KDE over log-moneyness. Same grid as $`Q`$. The leverage term captures asymmetric volatility; residual bootstrap preserves volatility clustering.
 
 ### 4. Compute Wasserstein distances
 
@@ -55,7 +55,14 @@ We observe a **positive association in-sample** between $`W_1(Q, Q_{\text{prev}}
 
 ### $`W_2(Q, P)`$ as regime proxy
 
-$`W_2(Q, P)`$ measures Q–P divergence. Under our bootstrap $`P`$, $`W_2`$ is *lower* in stress (top RV decile) than calm. See [DIAGNOSTICS.md](DIAGNOSTICS.md) for the sanity table.
+$`W_2(Q, P)`$ measures Q–P divergence. Under our FHS-GARCH $`P`$:
+
+| Regime | Mean $`W_2(Q,P)`$ |
+|--------|-------------------|
+| Calm (bottom RV decile) | 0.047 |
+| Stress (top RV decile)  | 0.035 |
+
+$`W_2`$ is *lower* in stress than calm (diff = −0.012). See [DIAGNOSTICS.md](DIAGNOSTICS.md).
 
 ### Decile evidence
 
@@ -81,7 +88,7 @@ $`Q`$ (blue) and $`P`$ (orange) over time and log-moneyness. Vertical gap = loca
 ## Limitations
 
 - **Data:** Weekly options → coarse series; daily would sharpen.
-- **$`P`$:** 252-day bootstrap; GARCH/jumps could improve.
+- **$`P`$:** FHS-GJR-GARCH; jump-diffusion could further refine.
 - **Tenor:** 7D only here; multi-tenor would add term structure.
 - **$`W_1`$–VRP:** In-sample association; subperiod robustness pending.
 - **No transaction cost modeling** yet; strategy backtests are next.

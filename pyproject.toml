@@ -7,6 +7,7 @@ dependencies = [
     "polars>=0.20",
     "numpy>=1.24",
     "scipy>=1.11",
+    "arch>=6.0",
     "pyyaml>=6.0",
     "pyarrow>=14.0",
     "matplotlib>=3.7",
@@ -14,7 +15,6 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-garch = ["arch>=6.0"]
 dev = ["pytest>=7.0", "ruff>=0.1"]
 gaussian-demo = ["plotly>=5.0", "pot>=0.9", "kaleido>=0.2"]
 
