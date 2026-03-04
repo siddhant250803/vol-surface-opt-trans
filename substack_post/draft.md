@@ -41,6 +41,12 @@ for $p = 1, 2$.
 
 These distances capture shape, skew, and location. They do not collapse the distribution into a single moment. The surface is treated as geometry, not as a number.
 
+*Conceptually, W₁ and W₂ measure how mass is transported between distributions. Below: Gaussian illustration of the optimal transport map.*
+
+![W2 optimal transport map](charts/ot_w2_map.png)
+
+![W1 optimal transport map](charts/ot_w1_map.png)
+
 ---
 
 ## Finding 1: Instability Predicts VRP
@@ -67,11 +73,17 @@ $$
 
 The decile spread is roughly 0.17 in annualized variance units. The in sample correlation between $W_1$ and forward VRP is about 0.54.
 
+![W1 time series](charts/w1_q_vs_q_ts.png)
+
+![Variance risk premium by W1 decile](charts/decile_chart.png)
+
 Interpretation:
 
 When the risk neutral distribution is stable, implied and realized line up. When the distribution is shifting materially, repricing risk is high and realized variance tends to exceed implied.
 
 This suggests a reframing of VRP. It is not only compensation for crash risk. It may also compensate sellers of variance for distributional instability. When the market is actively revising its beliefs, implied variance lags realized.
+
+![W1 vs forward RV − IV²](charts/w1_vs_rv_iv_scatter.png)
 
 ### Is This Just VIX in Disguise?
 
@@ -105,6 +117,8 @@ Empirically we observe the opposite.
 | Stress top RV decile  | 0.035 |
 
 In stress, $Q$ and $P$ converge (W2 drops from 0.047 in calm to 0.035 in stress).
+
+![W2 time series: Q vs P divergence](charts/w2_q_vs_p_ts.png)
 
 Why?
 
