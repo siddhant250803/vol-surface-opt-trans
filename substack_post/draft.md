@@ -43,6 +43,18 @@ These distances capture shape, skew, and location. They do not collapse the dist
 
 *Conceptually, W₁ and W₂ measure how mass is transported between distributions. Below: Gaussian illustration of the optimal transport map.*
 
+### Precursor: IV Surface Dynamics & RV-IV Convergence
+
+Before comparing distributions, we measure how the implied volatility surface evolves over time and how realized variance converges to implied variance as options approach expiry.
+
+| Experiment | Finding |
+|------------|---------|
+| **IV surface over time** | ATM total variance (w) and skew by tau bucket (7D–90D). |
+| **RV/IV² by horizon** | 5d: mean 0.84; 7d: mean 0.89. Ratio &lt; 1 ⇒ IV rich vs RV (typical VRP). |
+| **Convergence by DTE** | For 7-day options, mean RV/IV² ≈ 1.03 (RV converges to IV² at expiry). |
+
+This establishes the baseline: IV typically exceeds RV (variance risk premium), and as options approach expiry, realized variance converges to the implied forecast.
+
 ![W2 optimal transport map](charts/ot_w2_map.png)
 
 ![W1 optimal transport map](charts/ot_w1_map.png)
@@ -98,6 +110,8 @@ Controlling for:
 the predictive relationship remains economically meaningful. The signal is not reducible to scalar vol changes. It captures distributional drift, not just variance level.
 
 Subperiod checks pre and post 2020 show consistent ordering across deciles, though magnitudes vary.
+
+What’s going on under the hood? VIX collapses the entire vol surface into a single number—the implied volatility of a synthetic ATM option. It tells you the *level* of fear, not how that fear is *changing*. The actual risk-neutral distribution can shift, skew, or fatten its tails in ways that leave VIX nearly unchanged: skew can steepen while ATM vol stays flat, or the distribution can lurch left (crash repricing) without a big move in variance. $W_1$ treats the surface as a full distribution and measures how far it has moved from yesterday—shape, location, and tails together. That’s why it’s fundamentally more useful than VIX: it captures distributional drift, not just level. When the market is actively revising its beliefs about the future return distribution, $W_1$ spikes. VIX might not.
 
 This is not a finished trading strategy. It is evidence that instability in the surface carries incremental information.
 
@@ -187,7 +201,7 @@ Several extensions matter:
 3. Cost adjusted trading tests and regime stability across decades.
 4. Joint modeling of $W_1$, vol of vol, and macro event days.
 
-The goal is not to claim a finished signal. It is to argue that the geometry of the vol surface contains information that scalar diagnostics miss.
+The point is not to offer a finished signal, but to show that the surface’s geometry—captured by Wasserstein distances—reveals dynamics that scalar VRP or IV metrics miss. These distances are a stepping stone to understanding how the entire distribution shifts and evolves over time, rather than just focusing on level differences. In doing so, they offer the potential to replace traditional VRP diagnostics with a richer, more structural view of risk and the surface's movement.
 
 ---
 
@@ -195,7 +209,9 @@ The goal is not to claim a finished signal. It is to argue that the geometry of 
 
 The volatility surface is not a number. It is a distribution moving through time.
 
-Optimal transport gives a metric on that movement.
+Traditional VRP metrics—$RV - IV^2$ or its scalar cousins—are useful but coarse. They compress the entire surface into a single gap. Wasserstein distances are more nuanced: they treat the surface as geometry.
+
+$W_1$ and $W_2$ do not replace VRP. They refine it. $W_1$ captures when the distribution is *shifting*, not just whether IV is high or low, and that shift predicts when realized variance will exceed implied. $W_2$ captures when the market and history *disagree* on the shape of the distribution, and that disagreement peaks in calm regimes.
 
 When the risk neutral distribution shifts materially, realized variance is more likely to exceed implied. When risk neutral and physical distributions converge, regimes are stressed.
 

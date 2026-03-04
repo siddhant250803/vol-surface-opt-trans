@@ -16,6 +16,20 @@ See [docs/VRP_DEFINITIONS.md](docs/VRP_DEFINITIONS.md) for full specification. S
 
 ---
 
+## Precursor: IV Surface Dynamics & RV-IV Convergence
+
+Before comparing distributions, we measure how the implied volatility surface evolves over time and how realized variance converges to implied variance as options approach expiry.
+
+| Experiment | Finding |
+|------------|---------|
+| **IV surface over time** | ATM total variance (w) and skew by tau bucket (7D–90D). Chart: `iv_surface_over_time.png`. |
+| **RV/IV² by horizon** | 5d: mean 0.84; 7d: mean 0.89. Ratio &lt; 1 ⇒ IV rich vs RV (typical VRP). Chart: `rv_iv_ratio_by_horizon.png`. |
+| **Convergence by DTE** | For 7-day options, mean RV/IV² ≈ 1.03 (RV converges to IV² at expiry). Chart: `rv_iv_convergence_by_dte.png`. |
+
+Run: `python scripts/experiment_iv_rv_convergence.py` → `outputs/report/iv_rv_convergence/`.
+
+---
+
 ## Overview
 
 We compare **risk-neutral ($Q$)** and **physical ($P$)** distributions from SPX options using Wasserstein distances.
@@ -100,6 +114,8 @@ Or run all at once: `./scripts/run_full_pipeline.sh`
 **Reproducibility:** Config hash in `outputs/cache/{hash}/`. Key knobs: `configs/tau_buckets.yaml`, `configs/physical.yaml` (window_days, n_sims, garch_model), `configs/density.yaml` (k_grid). Cache can be disabled with `--skip-cache` on pipeline run. FHS uses `seed` from `configs/base.yaml`.
 
 **Outputs:** `outputs/report/ot_findings/` (HTML, PNG, DIAGNOSTICS.md) · `outputs/report/factor/` (PNG) · `outputs/cache/` · `outputs/features/`
+
+**IV surface & RV–IV convergence:** `python scripts/experiment_iv_rv_convergence.py` → `outputs/report/iv_rv_convergence/` (IV surface over time, RV/IV² by horizon, convergence by days-to-expiry).
 
 **Note:** After the pipeline, run `generate_ot_report.py` and `gaussian_w1_w2_visualization.py` for full visuals (3D surfaces, decile chart, W1/W2 maps). P estimation (Stage 7) takes ~100 min with `n_sims=10000`; reduce to 2000 in `configs/physical.yaml` for faster runs (~20 min).
 
