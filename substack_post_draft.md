@@ -128,11 +128,13 @@ Risk neutral distribution $Q_t$:
 - Call prices via Black Scholes
 - Breeden Litzenberger second derivative to recover density
 
-Physical distribution $P_t$:
+Physical distribution $P_t$ (FHS-GJR-GARCH):
 
-- 252-day rolling window of daily log returns
-- FHS-GJR-GARCH: fit GJR-GARCH(1,1), residual bootstrap, forward simulate to 7-day cumulative returns
-- KDE over log-moneyness
+We use **Filtered Historical Simulation** with **GJR-GARCH(1,1)** instead of a simple iid bootstrap of raw returns. Why? Raw returns are heteroskedastic—variance clusters. An iid bootstrap assumes constant variance and understates tail risk. FHS filters returns into conditional volatilities $\sigma_t$ and standardized residuals $\varepsilon_t = r_t / \sigma_t$, which are approximately iid under the model. We bootstrap the residuals (not raw returns) and scale by *simulated* $\sigma_{t+h}$ from the GARCH recursion. This correctly propagates volatility dynamics to the forecast horizon.
+
+The **leverage term** $\gamma I(r<0) r^2$ in GJR-GARCH captures asymmetric volatility: negative shocks increase future variance more than positive shocks (the leverage effect). Plain GARCH treats them symmetrically.
+
+Procedure: (1) 252-day rolling window, strict, no look-ahead. (2) Fit GJR-GARCH(1,1) with Student-t innovations. (3) Extract standardized residuals $\hat{\varepsilon}_t = r_t / \hat{\sigma}_t$. (4) Resample $\hat{\varepsilon}_t$ with replacement. (5) Forward simulate: $r_{t+h} = \sigma_{t+h} \varepsilon^*$ with GARCH recursion; sum to 7-day cumulative return. (6) KDE over log-moneyness. Default: 10,000 paths per date.
 
 Previous distribution $Q_{t-1}$:
 

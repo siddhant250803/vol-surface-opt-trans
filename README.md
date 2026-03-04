@@ -52,7 +52,11 @@ $Q$ recovered via Breeden–Litzenberger; $P$ via FHS-GJR-GARCH (Filtered Histor
 1. **SVI fit** → implied vol surface [Gatheral & Jacquier (2014)]
 2. **Call prices** → from SVI
 3. **Q recovery** → Breeden–Litzenberger ($`q(K) = e^{rT} \partial^2 C/\partial K^2`$). Central finite differences on call prices; clip negative density, renormalize. No analytic SVI derivatives.
-4. **P estimation** → FHS-GJR-GARCH: 252-day rolling window, fit GJR-GARCH(1,1), residual bootstrap, forward simulate to $`H`$-day cumulative returns, KDE over log-moneyness.
+4. **P estimation** → FHS-GJR-GARCH (Filtered Historical Simulation with GJR-GARCH(1,1)):
+   - 252-day rolling window of daily log returns (strict, no look-ahead).
+   - Fit GJR-GARCH(1,1): $`r_t = \sigma_t \varepsilon_t`$ with variance $`\sigma_{t+1}^2 = \omega + \alpha r_t^2 + \gamma I(r_t<0) r_t^2 + \beta \sigma_t^2`$. Student-t innovations. The leverage term $`\gamma I(r<0) r^2`$ captures asymmetric volatility (negative shocks amplify variance).
+   - Standardized residuals $`\hat{\varepsilon}_t = r_t / \hat{\sigma}_t`$ are approximately iid. We bootstrap these (not raw returns) to preserve volatility clustering.
+   - Forward simulate: for each path, $`r_{t+h} = \sigma_{t+h} \varepsilon^*`$ with GARCH recursion; sum to $`H`$-day cumulative return. KDE over log-moneyness.
 5. **$`Q_{\text{prev}}`$** → Constant maturity: interpolate previous day's fitted surface to $`\tau`$ days to expiry, recover $`Q_{\text{prev}}`$ on same grid. (Config: `distances.use_constant_maturity_q_prev: true`.)
 6. **Distances** → $`W_1`$, $`W_2`$ via quantile-based formulas [Villani (2003)]
 
@@ -107,4 +111,5 @@ Or run all at once: `./scripts/run_full_pipeline.sh`
 
 - Breeden, D.T. & Litzenberger, R.H. (1978). Prices of state-contingent claims implicit in option prices. *Journal of Business*, 51(4), 621–651.
 - Gatheral, J. & Jacquier, A. (2014). Arbitrage-free SVI volatility surfaces. *Quantitative Finance*, 14(1), 59–71.
+- Glosten, L.R., Jagannathan, R., & Runkle, D.E. (1993). On the relation between the expected value and the volatility of the nominal excess return on stocks. *Journal of Finance*, 48(5), 1779–1801. (GJR-GARCH)
 - Villani, C. (2003). *Topics in Optimal Transportation*. AMS.

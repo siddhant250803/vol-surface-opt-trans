@@ -34,7 +34,7 @@ where $c = C/F$. We use **central finite differences** for the derivatives; clip
 
 ### 3. Estimate the physical distribution P
 
-**$`P`$ is built via FHS-GJR-GARCH** (Filtered Historical Simulation with GJR-GARCH(1,1)): 252-day rolling window of daily log returns, fit GJR-GARCH with Student-t innovations, residual bootstrap of standardized residuals, forward simulate to $`H`$-day cumulative returns, KDE over log-moneyness. Same grid as $`Q`$. The leverage term captures asymmetric volatility; residual bootstrap preserves volatility clustering.
+**$`P`$ is built via FHS-GJR-GARCH** (Filtered Historical Simulation with GJR-GARCH(1,1)): 252-day rolling window, fit GJR-GARCH(1,1) with Student-t innovations, residual bootstrap of standardized residuals (not raw returns), forward simulate to $`H`$-day cumulative returns, KDE over log-moneyness. Same grid as $`Q`$. The leverage term $`\gamma I(r<0) r^2`$ captures asymmetric volatility; residual bootstrap preserves volatility clustering. See README Methodology for full procedure.
 
 ### 4. Compute Wasserstein distances
 
@@ -102,3 +102,5 @@ $`Q`$ (blue) and $`P`$ (orange) over time and log-moneyness. Vertical gap = loca
 [2] Villani, C. (2003). *Topics in Optimal Transportation*. AMS. (1D quantile formula: §2.1.)
 
 [3] Gatheral, J. & Jacquier, A. (2014). Arbitrage-free SVI volatility surfaces. *Quantitative Finance*, 14(1), 59–71.
+
+[4] Glosten, L.R., Jagannathan, R., & Runkle, D.E. (1993). On the relation between the expected value and the volatility of the nominal excess return on stocks. *Journal of Finance*, 48(5), 1779–1801. (GJR-GARCH)
